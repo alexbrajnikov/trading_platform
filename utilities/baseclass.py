@@ -97,3 +97,4 @@ class BaseClass:
         except (NoSuchElementException, TimeoutException) as err:
             print('Error on click element by locator, check locator', locator)
             print(err)
+
