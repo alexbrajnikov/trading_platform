@@ -1,5 +1,6 @@
 from selenium import webdriver
-from selenium.webdriver import ActionChains, Keys
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from keyboard import press
 
@@ -16,6 +17,12 @@ class MainPage:
     button_sell_xpath = '//button[text()="Sell"]'
     button_order_type_xpath = "//button[@data-testid='order-type-dropdown-value']"
     market_order_xpath = "//ul//li[text()='MARKET']"
+    delta_total_xpath = "//tfoot//td[@data-column='delta']/span/span"
+    all_trades_check_box_css = '[class="checkbox-container center buy"] input'
+    check_box_clickable_css = '[class="checkbox-container center buy"]'
+    button_collap_right_panel_css = '[class="collapsable-panel__divider right-pane-divider"]'
+
+
     def __init__(self, driver):
         self.driver = driver
 
@@ -24,6 +31,18 @@ class MainPage:
 
     def click_on_symbol(self):
         press('enter')
+
+    def get_position_quantity(self):
+        check_box = self.driver.find_element(By.CSS_SELECTOR, self.all_trades_check_box_css)
+        if check_box.is_selected():
+            pass
+        else:
+            self.driver.find_element(By.CSS_SELECTOR, self.check_box_clickable_css).click()
+        action = ActionChains(self.driver)
+        action.move_to_element(self.driver.find_element(By.CSS_SELECTOR , self.button_collap_right_panel_css)).click().perform()
+        total = self.driver.find_element(By.XPATH, self.delta_total_xpath).text
+        return total
+
 
     def click_buy_button(self):
         self.driver.find_element(By.CSS_SELECTOR, self.button_buy_css).click()
